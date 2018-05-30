@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алёна Николаенко](https://up.htmlacademy.ru/javascript/14/user/234657).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Ключковский](https://htmlacademy.ru/profile/id44700).
 
 ---
 
