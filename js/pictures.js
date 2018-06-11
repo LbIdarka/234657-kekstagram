@@ -14,10 +14,10 @@
   var containerSocialComment = document.querySelector('.social__comments');
 
   var getRandomNumber = function (min, max) {
-    return Math.floor(Math.random() * (max + 1 - min)) + Math.floor(min);
+    return Math.floor(Math.random() * (max + 1 - min)) + min;
   };
 
-  var getRandomString = function (strings) {
+  var getRandomElement = function (strings) {
     return strings[Math.floor(Math.random() * strings.length)];
   };
 
@@ -25,21 +25,23 @@
     var randomComments = [];
     var randomCommentsLength = getRandomNumber(COMMENT_COUNT_MIN, COMMENT_COUNT_MAX);
 
-    for (var i = 0; i < randomCommentsLength; i++) {
-      randomComments.push(COMMENTS[getRandomNumber(0, COMMENTS.length)]);
+    while (randomComments.length < randomCommentsLength) {
+      randomComments.push(getRandomElement(COMMENTS));
     }
+
     return randomComments;
   };
 
   var getFotos = function () {
     var fotos = [];
+    var fotoComments = getComments();
 
     for (var i = 0; i < FOTOS_NUMBERS; i++) {
       var foto = {
         url: 'photos/' + (i + 1) + '.jpg',
         likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
-        comments: getComments(),
-        description: getRandomString(DESCRIPTION)
+        comments: fotoComments,
+        description: getRandomElement(DESCRIPTION)
       };
       fotos.push(foto);
     }
@@ -68,8 +70,8 @@
   renderFoto();
 
 
-  bigFoto.classList.remove('hidden');
   var renderBigFoto = function () {
+    bigFoto.classList.remove('hidden');
     var dataFotos = getFotos();
 
     bigFoto.querySelector('.big-picture__img img').src = dataFotos[0].url;
@@ -111,12 +113,12 @@
   };
   renderUsersComments();
 
-  var hiddenBlocks = function () {
+  var hideBlocks = function () {
     var commentCount = bigFoto.querySelector('.social__comment-count');
     var commentLoadmore = bigFoto.querySelector('.social__loadmore');
 
     commentCount.classList.add('visually-hidden');
     commentLoadmore.classList.add('visually-hidden');
   };
-  hiddenBlocks();
+  hideBlocks();
 })();
