@@ -163,55 +163,43 @@
   });
 
   /* Масштаб загружаемого изображения*/
+  var VALUE_RESIZE_MIN = 25;
+  var VALUE_RESIZE_MAX = 100;
   var RESIZE_STEP = 25;
-  var resizeValue = uploadImg.querySelector('.resize__control--value');
+  var resizeControl = uploadImg.querySelector('.resize__control--value');
   var reduceImg = uploadImg.querySelector('.resize__control--minus');
   var increaseImg = uploadImg.querySelector('.resize__control--plus');
-  var value = parseInt(resizeValue.value, 10);
+  var valueResizeDefault = resizeControl.value = 100;
+  var valueResize = valueResizeDefault;
   var imgPreview = document.querySelector('.img-upload__preview');
 
   var resizeMinus = function () {
-    console.log(value);
-    var valueMin = 25;
-    if (value >= valueMin) {
-      var valueMinus = value -= RESIZE_STEP;
-    }
+    valueResize = Math.max(valueResize - RESIZE_STEP, VALUE_RESIZE_MIN);
+    resizeControl.value = valueResize + '%';
 
-    if (valueMinus <= valueMin || value < valueMin) {
-      valueMinus = valueMin;
-    }
-    resizeValue.value = valueMinus + '%';
-    return resizeValue.value;
+    return resizeControl.value;
   };
 
   var resizePlus = function () {
-    var valueMax = 100;
-    if (value <= valueMax) {
-      var valuePlus = value += RESIZE_STEP;
-    }
+    valueResize = Math.min(valueResize + RESIZE_STEP, VALUE_RESIZE_MAX);
+    resizeControl.value = valueResize + '%';
 
-    if (valuePlus >= valueMax || value > valueMax) {
-      return valueMax;
-    }
-    resizeValue.value = valuePlus + '%';
-    return resizeValue.value;
+    return resizeControl.value;
   };
 
   var transformImg = function () {
-    var transformImgValue = value / 100;
+    var transformImgValue = valueResize / 100;
     imgPreview.style.transform = 'scale(' + transformImgValue + ')';
   };
 
   reduceImg.addEventListener('click', function () {
     resizeMinus();
     transformImg();
-    console.log(resizeMinus());
   });
 
   increaseImg.addEventListener('click', function () {
     resizePlus();
     transformImg();
-    console.log(resizePlus());
   });
 
 })();
