@@ -12,6 +12,7 @@
   var similarFotoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var similarFotoList = document.querySelector('.pictures');
   var bigFoto = document.querySelector('.big-picture');
+  var bigFotoEsc = bigFoto.querySelector('.big-picture__cancel');
   var containerSocialComment = document.querySelector('.social__comments');
 
   var getRandomNumber = function (min, max) {
@@ -78,17 +79,33 @@
   renderFoto();
 
 
-  var renderBigFoto = function () {
-    bigFoto.classList.remove('hidden');
+  var renderBigFoto = function (evt) {
+    var bigFotoUrl = evt.target.src;
+    usersFotos[i].url = bigFotoUrl;
 
-    bigFoto.querySelector('.big-picture__img img').src = usersFotos[0].url;
-    bigFoto.querySelector('.likes-count').textContent = usersFotos[0].likes;
-    bigFoto.querySelector('.comments-count').textContent = usersFotos[0].comments.length;
-    bigFoto.querySelector('.social__caption').textContent = usersFotos[0].description;
+    bigFoto.querySelector('.big-picture__img img').src = usersFotos[i].url;
+    bigFoto.querySelector('.likes-count').textContent = usersFotos[i].likes;
+    bigFoto.querySelector('.comments-count').textContent = usersFotos[i].comments.length;
+    bigFoto.querySelector('.social__caption').textContent = usersFotos[i].description;
+
+    bigFoto.classList.remove('hidden');
+    document.addEventListener('keydown', onEditImgEscPress);
 
     return bigFoto;
   };
-  // renderBigFoto();
+
+  var miniFotoUser = document.querySelectorAll('.picture__link');
+
+  for (var j = 0; j < miniFotoUser.length; j++) {
+    miniFotoUser[j].addEventListener('click', renderBigFoto);
+  }
+
+  var onBigFotoCancel = function () {
+    bigFoto.classList.add('hidden');
+    document.removeEventListener('keydown', onEditImgEscPress);
+  };
+  bigFotoEsc.addEventListener('click', onBigFotoCancel);
+
 
   var deleteOldComments = function () {
     while (containerSocialComment.firstChild) {
@@ -137,6 +154,7 @@
 
   var onEditImgEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
+      onBigFotoCancel();
       closeEditImg();
     }
   };
@@ -212,8 +230,6 @@
   var getPinValue = function (evt) {
     var scaleInputValue = scaleInput.value;
     scaleInputValue = evt.offsetX;
-
-    console.log(scaleInputValue);
 
     var getFilterValueEffects = function (a, b) {
       var secondaryFilterValue = b - a;
