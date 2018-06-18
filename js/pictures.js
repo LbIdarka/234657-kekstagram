@@ -274,5 +274,11 @@
     filterInputs[i].addEventListener('change', setEffects);
   }
 
+  var effectsList = document.querySelector('.effects');
+  var effectNone = effectsList.querySelector('#effect-none');
+
+  effectNone.addEventListener('click', function () {
+    effectsList.classList.add('hidden');
+  });
 
 })();
