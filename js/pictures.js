@@ -43,13 +43,12 @@
 
   var getFotos = function () {
     var fotos = [];
-    var fotoComments = getComments();
 
     for (var i = 0; i < FOTOS_NUMBERS; i++) {
       var foto = {
         url: 'photos/' + urlFoto[i] + '.jpg',
         likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
-        comments: fotoComments,
+        comments: getComments(),
         description: getRandomElement(DESCRIPTION)
       };
       fotos.push(foto);
@@ -63,7 +62,7 @@
 
     fotoElement.querySelector('.picture__img').src = foto.url;
     fotoElement.querySelector('.picture__stat--likes').textContent = foto.likes;
-    fotoElement.querySelector('.picture__stat--comments').textContent = foto.comments;
+    fotoElement.querySelector('.picture__stat--comments').textContent = foto.description;
 
     return fotoElement;
   };
@@ -79,13 +78,12 @@
   renderFoto();
 
 
-  var renderBigFoto = function (evt) {
-    usersFotos[i].url = evt.target.src;
-
-    bigFoto.querySelector('.big-picture__img img').src = usersFotos[i].url;
-    bigFoto.querySelector('.likes-count').textContent = usersFotos[i].likes;
-    bigFoto.querySelector('.comments-count').textContent = usersFotos[i].comments.length;
-    bigFoto.querySelector('.social__caption').textContent = usersFotos[i].description;
+  var renderBigFoto = function (index) {
+    bigFoto.querySelector('.big-picture__img img').src = usersFotos[index].url;
+    bigFoto.querySelector('.likes-count').textContent = usersFotos[index].likes;
+    bigFoto.querySelector('.comments-count').textContent = usersFotos[index].comments.length;
+    bigFoto.querySelector('.social__caption').textContent = usersFotos[index].description;
+    bigFoto.querySelector('.social__text').textContent = usersFotos[index].comments;
 
     bigFoto.classList.remove('hidden');
     document.addEventListener('keydown', onEditImgEscPress);
@@ -93,10 +91,15 @@
     return bigFoto;
   };
 
-  var miniFotoUser = document.querySelectorAll('.picture__link');
+  var miniFotoLink = document.querySelectorAll('.picture__link');
 
-  for (var j = 0; j < miniFotoUser.length; j++) {
-    miniFotoUser[j].addEventListener('click', renderBigFoto);
+  for (var j = 0; j < miniFotoLink.length; j++) {
+    miniFotoLink[j].addEventListener('click', function (evt) {
+      var miniFoto = document.querySelectorAll('.picture__img');
+      var target = evt.target;
+      var index = Array.from(miniFoto).indexOf(target);
+      renderBigFoto(index);
+    });
   }
 
   var onBigFotoCancel = function () {
@@ -115,7 +118,7 @@
 
   var renderUsersComments = function () {
 
-    for (var i = 0; i < usersFotos[0].comments.length; i++) {
+    for (var i = 0; i < usersFotos[i].comments.length; i++) {
       var userComents = document.createElement('li');
       userComents.classList.add('social__comment');
       containerSocialComment.appendChild(userComents);
@@ -129,6 +132,7 @@
       userComents.appendChild(usersAvatar);
 
       var textUserComments = document.createElement('p');
+      textUserComments.classList.add('social__text');
       textUserComments.textContent = getComments();
       userComents.appendChild(textUserComments);
     }
