@@ -80,8 +80,7 @@
 
 
   var renderBigFoto = function (evt) {
-    var bigFotoUrl = evt.target.src;
-    usersFotos[i].url = bigFotoUrl;
+    usersFotos[i].url = evt.target.src;
 
     bigFoto.querySelector('.big-picture__img img').src = usersFotos[i].url;
     bigFoto.querySelector('.likes-count').textContent = usersFotos[i].likes;
@@ -162,7 +161,8 @@
   var openEditImg = function () {
     uploadImgOpen.classList.remove('hidden');
     filterPreview.classList.add(filterDefault);
-    resizeControl.value = valueResizeDefault;
+    resizeControl.value = valueResizeDefault + '%';
+    valueResize = valueResizeDefault;
     imgPreview.style.transform = 'none';
 
     document.addEventListener('keydown', onEditImgEscPress);
@@ -223,17 +223,19 @@
   var filterPreview = imgPreview.querySelector('.img-upload__preview img');
   var filterInputCheck = document.querySelector('.effects__radio[checked]');
   var filterDefault = 'effects__preview--' + filterInputCheck.value;
+  var scaleBox = uploadImgOpen.querySelector('.scale__line');
   var scalePin = uploadImgOpen.querySelector('.scale__pin');
-  var scaleInput = uploadImgOpen.querySelector('.scale__value');
 
 
   var getPinValue = function (evt) {
-    var scaleInputValue = scaleInput.value;
-    scaleInputValue = evt.offsetX;
+    var scaleBoxCoords = scaleBox.getBoundingClientRect();
+    var scaleBoxLeft = scaleBoxCoords.left;
+    scalePin = evt.clientX;
+    var scalePinCoordX = scalePin - scaleBoxLeft;
 
     var getFilterValueEffects = function (a, b) {
-      var secondaryFilterValue = b - a;
-      var paramFilter = scaleInputValue * secondaryFilterValue / 100;
+      var secondaryFilterValue = a + (b - a);
+      var paramFilter = scalePinCoordX * secondaryFilterValue / 100;
 
       return paramFilter;
     };
@@ -263,7 +265,7 @@
   };
 
   var setEffects = function (evt) {
-    scalePin.addEventListener('mouseup', getPinValue);
+    scaleBox.addEventListener('mouseup', getPinValue);
     filterPreview.classList = '';
     var filterClass = 'effects__preview--' + evt.target.value;
     filterPreview.classList.add(filterClass);
