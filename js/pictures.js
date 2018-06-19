@@ -83,7 +83,8 @@
     bigFoto.querySelector('.likes-count').textContent = usersFotos[index].likes;
     bigFoto.querySelector('.comments-count').textContent = usersFotos[index].comments.length;
     bigFoto.querySelector('.social__caption').textContent = usersFotos[index].description;
-    bigFoto.querySelector('.social__text').textContent = usersFotos[index].comments;
+    // bigFoto.querySelector('.social__text').textContent = usersFotos[index].comments;
+
 
     bigFoto.classList.remove('hidden');
     document.addEventListener('keydown', onEditImgEscPress);
@@ -99,6 +100,7 @@
       var target = evt.target;
       var index = Array.from(miniFoto).indexOf(target);
       renderBigFoto(index);
+      renderUsersComments();
     });
   }
 
@@ -137,7 +139,7 @@
       userComents.appendChild(textUserComments);
     }
   };
-  renderUsersComments();
+  // renderUsersComments();
 
   var hideBlocks = function () {
     var commentCount = bigFoto.querySelector('.social__comment-count');
@@ -235,11 +237,11 @@
   var getPinValue = function (evt) {
     var scaleLineCoords = scaleLine.getBoundingClientRect();
     var scaleLineLeft = scaleLineCoords.left;
-    // scalePin = evt.clientX;
+    var scaleLineWidth = scaleLineCoords.width;
     var scalePinCoordX = evt.clientX - scaleLineLeft;
 
     var getFilterValueEffects = function (a, b) {
-      var secondaryFilterValue = scalePinCoordX / 100;
+      var secondaryFilterValue = scalePinCoordX / scaleLineWidth;
       var paramFilter = secondaryFilterValue * (b - a) + a;
 
       return paramFilter;
