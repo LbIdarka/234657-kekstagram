@@ -83,8 +83,9 @@
     bigFoto.querySelector('.likes-count').textContent = usersFotos[index].likes;
     bigFoto.querySelector('.comments-count').textContent = usersFotos[index].comments.length;
     bigFoto.querySelector('.social__caption').textContent = usersFotos[index].description;
-    // bigFoto.querySelector('.social__text').textContent = usersFotos[index].comments;
 
+    deleteOldComments();
+    renderUsersComments();
 
     bigFoto.classList.remove('hidden');
     document.addEventListener('keydown', onEditImgEscPress);
@@ -100,7 +101,6 @@
       var target = evt.target;
       var index = Array.from(miniFoto).indexOf(target);
       renderBigFoto(index);
-      renderUsersComments();
     });
   }
 
@@ -116,10 +116,8 @@
       containerSocialComment.removeChild(containerSocialComment.firstChild);
     }
   };
-  deleteOldComments();
 
   var renderUsersComments = function () {
-
     for (var i = 0; i < usersFotos[i].comments.length; i++) {
       var userComents = document.createElement('li');
       userComents.classList.add('social__comment');
@@ -139,7 +137,6 @@
       userComents.appendChild(textUserComments);
     }
   };
-  // renderUsersComments();
 
   var hideBlocks = function () {
     var commentCount = bigFoto.querySelector('.social__comment-count');
