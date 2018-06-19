@@ -227,19 +227,20 @@
   var filterPreview = imgPreview.querySelector('.img-upload__preview img');
   var filterInputCheck = document.querySelector('.effects__radio[checked]');
   var filterDefault = 'effects__preview--' + filterInputCheck.value;
-  var scaleBox = uploadImgOpen.querySelector('.scale__line');
-  var scalePin = uploadImgOpen.querySelector('.scale__pin');
+  var scaleBox = uploadImgOpen.querySelector('.scale');
+  var scaleLine = scaleBox.querySelector('.scale__line');
+  var scalePin = scaleBox.querySelector('.scale__pin');
 
 
   var getPinValue = function (evt) {
-    var scaleBoxCoords = scaleBox.getBoundingClientRect();
-    var scaleBoxLeft = scaleBoxCoords.left;
-    scalePin = evt.clientX;
-    var scalePinCoordX = scalePin - scaleBoxLeft;
+    var scaleLineCoords = scaleLine.getBoundingClientRect();
+    var scaleLineLeft = scaleLineCoords.left;
+    // scalePin = evt.clientX;
+    var scalePinCoordX = evt.clientX - scaleLineLeft;
 
     var getFilterValueEffects = function (a, b) {
-      var secondaryFilterValue = a + (b - a);
-      var paramFilter = scalePinCoordX * secondaryFilterValue / 100;
+      var secondaryFilterValue = scalePinCoordX / 100;
+      var paramFilter = secondaryFilterValue * (b - a) + a;
 
       return paramFilter;
     };
@@ -269,7 +270,7 @@
   };
 
   var setEffects = function (evt) {
-    scaleBox.addEventListener('mouseup', getPinValue);
+    scalePin.addEventListener('mouseup', getPinValue);
     filterPreview.classList = '';
     var filterClass = 'effects__preview--' + evt.target.value;
     filterPreview.classList.add(filterClass);
@@ -285,6 +286,7 @@
 
   effectNone.addEventListener('click', function () {
     effectsList.classList.add('hidden');
+    scaleBox.classList.add('hidden');
   });
 
 })();
