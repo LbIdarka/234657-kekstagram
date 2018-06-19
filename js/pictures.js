@@ -247,7 +247,6 @@
     var effectPhobos = imgPreview.querySelector('.effects__preview--phobos');
     var effectHeat = imgPreview.querySelector('.effects__preview--heat');
 
-
     if (effectChrome) {
       effectChrome.style.filter = 'grayscale(' + getFilterValueEffects(0, 1) + ')';
     }
@@ -271,18 +270,11 @@
     var filterClass = 'effects__preview--' + evt.target.value;
     filterPreview.classList.add(filterClass);
     filterPreview.style = 'none';
+    scaleBox.classList.toggle('hidden', evt.target.value === 'none');
   };
 
   for (var i = 0; i < filterInputs.length; i++) {
     filterInputs[i].addEventListener('change', setEffects);
   }
-
-  var effectsList = document.querySelector('.effects');
-  var effectNone = effectsList.querySelector('#effect-none');
-
-  effectNone.addEventListener('click', function () {
-    effectsList.classList.add('hidden');
-    scaleBox.classList.add('hidden');
-  });
 
 })();
