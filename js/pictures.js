@@ -84,8 +84,26 @@
     bigFoto.querySelector('.comments-count').textContent = usersFotos[index].comments.length;
     bigFoto.querySelector('.social__caption').textContent = usersFotos[index].description;
 
+    /* вывод комментариев под фото */
     deleteOldComments();
-    renderUsersComments();
+    for (var i = 0; i < usersFotos[index].comments.length; i++) {
+      var userComents = document.createElement('li');
+      userComents.classList.add('social__comment');
+      containerSocialComment.appendChild(userComents);
+
+      var usersAvatar = document.createElement('img');
+      usersAvatar.classList.add('social__picture');
+      usersAvatar.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
+      usersAvatar.alt = 'Аватар комментатора фотографии';
+      usersAvatar.width = 35;
+      usersAvatar.height = 35;
+      userComents.appendChild(usersAvatar);
+
+      var textUserComments = document.createElement('p');
+      textUserComments.classList.add('social__text');
+      textUserComments.textContent = getComments();
+      userComents.appendChild(textUserComments);
+    }
 
     bigFoto.classList.remove('hidden');
     document.addEventListener('keydown', onEditImgEscPress);
@@ -114,27 +132,6 @@
   var deleteOldComments = function () {
     while (containerSocialComment.firstChild) {
       containerSocialComment.removeChild(containerSocialComment.firstChild);
-    }
-  };
-
-  var renderUsersComments = function () {
-    for (var i = 0; i < usersFotos[i].comments.length; i++) {
-      var userComents = document.createElement('li');
-      userComents.classList.add('social__comment');
-      containerSocialComment.appendChild(userComents);
-
-      var usersAvatar = document.createElement('img');
-      usersAvatar.classList.add('social__picture');
-      usersAvatar.src = 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
-      usersAvatar.alt = 'Аватар комментатора фотографии';
-      usersAvatar.width = 35;
-      usersAvatar.height = 35;
-      userComents.appendChild(usersAvatar);
-
-      var textUserComments = document.createElement('p');
-      textUserComments.classList.add('social__text');
-      textUserComments.textContent = getComments();
-      userComents.appendChild(textUserComments);
     }
   };
 
