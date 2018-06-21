@@ -301,7 +301,7 @@
 
   var checkValidHashtag = function () {
     /* получаем массив из хэштегов */
-    var hashtags = hashtagsField.value.split(' ');
+    var hashtags = hashtagsField.value.toLowerCase().split(' ');
 
     /* проверяем повторяющиеся хэш-теги */
     var checkHashtagsUnique = function (element, index, array) {
@@ -333,7 +333,7 @@
         } else if (hashtags[k].length < HASHTAGS_MIN_SIMBOLS) {
           hashtagsField.setCustomValidity('Не стесняйтесь, придумайте хэш-тег длинее ' + HASHTAGS_MIN_SIMBOLS + '-х символов');
         } else if (!checkSimbolSpace(hashtags)) {
-          hashtagsField.setCustomValidity('Мы за чистоту! Поcтавьте пробел между вашими хэш-тегами');
+          hashtagsField.setCustomValidity('Мы за чистоту восприятия! Поcтавьте пробел между вашими хэш-тегами');
         } else if (!hashtags.every(checkHashtagsUnique)) {
           hashtagsField.setCustomValidity('Будьте уникальным, не повторяйте ваши хэш-теги');
         } else {
