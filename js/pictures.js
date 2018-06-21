@@ -158,6 +158,14 @@
     }
   };
 
+  var onEscPressReset = function () {
+    document.removeEventListener('keydown', onEditImgEscPress);
+  };
+
+  var onEscPressRecovery = function () {
+    document.addEventListener('keydown', onEditImgEscPress);
+  };
+
   var openEditImg = function () {
     uploadImgOpen.classList.remove('hidden');
     filterPreview.classList.add(filterDefault);
@@ -165,14 +173,14 @@
     valueResize = valueResizeDefault;
     imgPreview.style.transform = 'none';
 
-    document.addEventListener('keydown', onEditImgEscPress);
+    onEscPressRecovery();
   };
 
   var closeEditImg = function () {
     uploadImgOpen.classList.add('hidden');
 
     uploadImgLabel.removeEventListener('change', openEditImg);
-    document.removeEventListener('keydown', onEditImgEscPress);
+    onEscPressReset();
   };
 
   uploadImgLabel.addEventListener('change', function () {
@@ -276,5 +284,66 @@
   for (var i = 0; i < filterInputs.length; i++) {
     filterInputs[i].addEventListener('change', setEffects);
   }
+
+  /* Валидация */
+
+  var HASHTAGS_NUMBER = 5;
+  var HASHTAGS_MIN_SIMBOLS = 2;
+  var HASHTAGS_MAX_SIMBOLS = 20;
+  var hashtagsField = document.querySelector('input[name=hashtags]');
+  var commentField = document.querySelector('.text__description');
+  // var buttonForm = document.querySelector('#upload-submit');
+
+  hashtagsField.addEventListener('focus', onEscPressReset);
+  hashtagsField.addEventListener('blur', onEscPressRecovery);
+  commentField.addEventListener('focus', onEscPressReset);
+  commentField.addEventListener('blur', onEscPressRecovery);
+
+  var checkValidHashtag = function () {
+    /* получаем массив из хэштегов */
+    var hashtags = hashtagsField.value.toLowerCase().split(' ');
+
+    /* проверяем повторяющиеся хэш-теги */
+    var checkHashtagsUnique = function (element, index, array) {
+      return array.indexOf(element) === index;
+    };
+
+    /* проверяем на наличие пробела перед тегом */
+    var checkSimbolSpace = function () {
+      for (var k = 0; k < hashtags.length; k++) {
+        var hashtagSymbols = hashtags[k].split('');
+        for (var n = 1; n < hashtagSymbols.length; n++) {
+          if (hashtagSymbols[n] === '#') {
+            return false;
+          }
+        }
+      }
+      return true;
+    };
+
+    /* проверяем на количество хэштегов */
+    if (hashtags.length > HASHTAGS_NUMBER) {
+      hashtagsField.setCustomValidity('Краткость - сестра таланта, ' + HASHTAGS_NUMBER + '-ть хэш-тегов - это максимум');
+    } else {
+      for (var k = 0; k < hashtags.length; k++) {
+        if (hashtags[k].charAt(0) !== '#') {
+          hashtagsField.setCustomValidity('Попробуйте начать ваш хэш-тег со знака #');
+        } else if (hashtags[k].length > HASHTAGS_MAX_SIMBOLS) {
+          hashtagsField.setCustomValidity('Будьте скромнее, придумайте хэш-тег менее ' + HASHTAGS_MAX_SIMBOLS + '-и символов');
+        } else if (hashtags[k].length < HASHTAGS_MIN_SIMBOLS) {
+          hashtagsField.setCustomValidity('Не стесняйтесь, придумайте хэш-тег длинее ' + HASHTAGS_MIN_SIMBOLS + '-х символов');
+        } else if (!checkSimbolSpace(hashtags)) {
+          hashtagsField.setCustomValidity('Мы за чистоту восприятия! Поcтавьте пробел между вашими хэш-тегами');
+        } else if (!hashtags.every(checkHashtagsUnique)) {
+          hashtagsField.setCustomValidity('Будьте уникальным, не повторяйте ваши хэш-теги');
+        } else {
+          hashtagsField.setCustomValidity('');
+        }
+      }
+    }
+  };
+
+  hashtagsField.addEventListener('input', checkValidHashtag);
+
 
 })();
