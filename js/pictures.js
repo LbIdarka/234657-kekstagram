@@ -326,12 +326,12 @@
       hashtagsField.setCustomValidity('Краткость - сестра таланта, ' + HASHTAGS_NUMBER + '-ть хэш-тегов - это максимум');
     } else {
       for (var k = 0; k < hashtags.length; k++) {
-        if (hashtags[k].length < HASHTAGS_MIN_SIMBOLS) {
-          hashtagsField.setCustomValidity('Не стесняйтесь, придумайте хэш-тег длинее ' + HASHTAGS_MIN_SIMBOLS + '-х символов');
+        if (hashtags[k].charAt(0) !== '#') {
+          hashtagsField.setCustomValidity('Попробуйте начать ваш хэш-тег со знака #');
         } else if (hashtags[k].length > HASHTAGS_MAX_SIMBOLS) {
           hashtagsField.setCustomValidity('Будьте скромнее, придумайте хэш-тег менее ' + HASHTAGS_MAX_SIMBOLS + '-и символов');
-        } else if (hashtags[k].charAt(0) !== '#') {
-          hashtagsField.setCustomValidity('Попробуйте начать ваш хэш-тег со знака #');
+        } else if (hashtags[k].length < HASHTAGS_MIN_SIMBOLS) {
+          hashtagsField.setCustomValidity('Не стесняйтесь, придумайте хэш-тег длинее ' + HASHTAGS_MIN_SIMBOLS + '-х символов');
         } else if (!checkSimbolSpace(hashtags)) {
           hashtagsField.setCustomValidity('Мы за чистоту! Поcтавьте пробел между вашими хэш-тегами');
         } else if (!hashtags.every(checkHashtagsUnique)) {
