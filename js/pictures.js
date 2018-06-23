@@ -8,6 +8,8 @@
   var COMMENTS = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
   var DESCRIPTION = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
   var FOTOS_NUMBERS = 25;
+  var MIN_LEVEL_SLIDER = 0;
+  var MAX_LEVEL_SLAIDER = 100 + '%';
   var randomFotos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
   var similarFotoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var similarFotoList = document.querySelector('.pictures');
@@ -234,19 +236,68 @@
   var scaleBox = uploadImgOpen.querySelector('.scale');
   var scaleLine = scaleBox.querySelector('.scale__line');
   var scalePin = scaleBox.querySelector('.scale__pin');
+  var scaleLevel = scaleBox.querySelector('.scale__level');
 
+  /* Перемещение пина на слайдере */
 
-  var getPinValue = function (evt) {
+  var movePin = function () {
     var scaleLineCoords = scaleLine.getBoundingClientRect();
     var scaleLineLeft = scaleLineCoords.left;
     var scaleLineWidth = scaleLineCoords.width;
-    var scalePinCoordX = evt.clientX - scaleLineLeft;
 
-    var getFilterValueEffects = function (a, b) {
-      var secondaryFilterValue = scalePinCoordX / scaleLineWidth;
-      var paramFilter = secondaryFilterValue * (b - a) + a;
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
 
-      return paramFilter;
+      var startCoords = moveEvt.clientX;
+      var scalePinCoordX = startCoords - scaleLineLeft;
+      window.pinProportionValue = scalePinCoordX / scaleLineWidth;
+
+
+      if (scalePinCoordX < MIN_LEVEL_SLIDER) {
+        scalePinCoordX = MIN_LEVEL_SLIDER;
+      } else if (scalePinCoordX > scaleLineWidth) {
+        scalePinCoordX = scaleLineWidth;
+      }
+
+      scalePin.style.left = scalePinCoordX + 'px';
+      scaleLevel.style.width = scalePin.style.left;
+      getValueEffect();
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  };
+
+  scalePin.addEventListener('mousedown', movePin);
+
+  /* Перключение эффектов фотографии */
+  var setEffects = function (evt) {
+    filterPreview.classList = '';
+    var filterClass = 'effects__preview--' + evt.target.value;
+    filterPreview.classList.add(filterClass);
+    filterPreview.style = 'none';
+    scalePin.style.left = MAX_LEVEL_SLAIDER;
+    scaleLevel.style.width = MAX_LEVEL_SLAIDER;
+    scaleBox.classList.toggle('hidden', evt.target.value === 'none');
+  };
+
+  for (var i = 0; i < filterInputs.length; i++) {
+    filterInputs[i].addEventListener('change', setEffects);
+  }
+
+  /* Изменение глубины эффекта */
+  var getValueEffect = function () {
+    var getParamProportion = function (a, b) {
+      var paramProportion = window.pinProportionValue * (b - a) + a;
+
+      return paramProportion;
     };
 
     var effectChrome = imgPreview.querySelector('.effects__preview--chrome');
@@ -256,43 +307,29 @@
     var effectHeat = imgPreview.querySelector('.effects__preview--heat');
 
     if (effectChrome) {
-      effectChrome.style.filter = 'grayscale(' + getFilterValueEffects(0, 1) + ')';
+      effectChrome.style.filter = 'grayscale(' + getParamProportion(0, 1) + ')';
     }
     if (effectSepia) {
-      effectSepia.style.filter = 'sepia(' + getFilterValueEffects(0, 1) + ')';
+      effectSepia.style.filter = 'sepia(' + getParamProportion(0, 1) + ')';
     }
     if (effectMarvin) {
-      effectMarvin.style.filter = 'invert(' + getFilterValueEffects(0, 100) + '%)';
+      effectMarvin.style.filter = 'invert(' + getParamProportion(0, 100) + '%)';
     }
     if (effectPhobos) {
-      effectPhobos.style.filter = 'blur(' + getFilterValueEffects(0, 3) + 'px)';
+      effectPhobos.style.filter = 'blur(' + getParamProportion(0, 3) + 'px)';
     }
     if (effectHeat) {
-      effectHeat.style.filter = 'brightness(' + getFilterValueEffects(1, 3) + ')';
+      effectHeat.style.filter = 'brightness(' + getParamProportion(1, 3) + ')';
     }
   };
 
-  var setEffects = function (evt) {
-    scalePin.addEventListener('mouseup', getPinValue);
-    filterPreview.classList = '';
-    var filterClass = 'effects__preview--' + evt.target.value;
-    filterPreview.classList.add(filterClass);
-    filterPreview.style = 'none';
-    scaleBox.classList.toggle('hidden', evt.target.value === 'none');
-  };
-
-  for (var i = 0; i < filterInputs.length; i++) {
-    filterInputs[i].addEventListener('change', setEffects);
-  }
 
   /* Валидация */
-
   var HASHTAGS_NUMBER = 5;
   var HASHTAGS_MIN_SYMBOLS = 2;
   var HASHTAGS_MAX_SYMBOLS = 20;
   var hashtagsField = document.querySelector('input[name=hashtags]');
   var commentField = document.querySelector('.text__description');
-  // var buttonForm = document.querySelector('#upload-submit');
 
   hashtagsField.addEventListener('focus', onEscPressReset);
   hashtagsField.addEventListener('blur', onEscPressRecovery);
