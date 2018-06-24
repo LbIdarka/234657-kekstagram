@@ -227,6 +227,8 @@
 
   /* Наложение эффекта на изображение */
 
+  var MIN_LEVEL_SLIDER = 0;
+  var MAX_LEVEL_SLAIDER = 100 + '%';
   var filterInputs = document.querySelectorAll('.effects__radio');
   var filterPreview = imgPreview.querySelector('.img-upload__preview img');
   var filterInputCheck = document.querySelector('.effects__radio[checked]');
@@ -234,19 +236,72 @@
   var scaleBox = uploadImgOpen.querySelector('.scale');
   var scaleLine = scaleBox.querySelector('.scale__line');
   var scalePin = scaleBox.querySelector('.scale__pin');
+  var scaleLevel = scaleBox.querySelector('.scale__level');
 
+  /* ===== Перемещение пина на слайдере ===== */
 
-  var getPinValue = function (evt) {
+  /* Получение координат для перемещения пина */
+  var movePin = function (evt) {
     var scaleLineCoords = scaleLine.getBoundingClientRect();
     var scaleLineLeft = scaleLineCoords.left;
     var scaleLineWidth = scaleLineCoords.width;
-    var scalePinCoordX = evt.clientX - scaleLineLeft;
+    var startCoords = evt.clientX;
+    var scalePinCoordX = startCoords - scaleLineLeft;
+    window.pinProportionValue = scalePinCoordX / scaleLineWidth;
 
-    var getFilterValueEffects = function (a, b) {
-      var secondaryFilterValue = scalePinCoordX / scaleLineWidth;
-      var paramFilter = secondaryFilterValue * (b - a) + a;
+    if (scalePinCoordX < MIN_LEVEL_SLIDER) {
+      scalePinCoordX = MIN_LEVEL_SLIDER;
+    } else if (scalePinCoordX > scaleLineWidth) {
+      scalePinCoordX = scaleLineWidth;
+    }
 
-      return paramFilter;
+    scalePin.style.left = scalePinCoordX + 'px';
+    scaleLevel.style.width = scalePin.style.left;
+    getValueEffect();
+  };
+
+  /* События, при которых происходит перемещение */
+  var onMouseDown = function () {
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      movePin(moveEvt);
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+      movePin(upEvt);
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  };
+
+  scaleBox.addEventListener('mousedown', onMouseDown);
+
+  /* Перключение эффектов фотографии */
+  var setEffects = function (evt) {
+    filterPreview.classList = '';
+    var filterClass = 'effects__preview--' + evt.target.value;
+    filterPreview.classList.add(filterClass);
+    filterPreview.style = 'none';
+    scalePin.style.left = MAX_LEVEL_SLAIDER;
+    scaleLevel.style.width = MAX_LEVEL_SLAIDER;
+    scaleBox.classList.toggle('hidden', evt.target.value === 'none');
+  };
+
+  for (var i = 0; i < filterInputs.length; i++) {
+    filterInputs[i].addEventListener('change', setEffects);
+  }
+
+  /* Изменение глубины эффекта */
+  var getValueEffect = function () {
+    var getParamProportion = function (a, b) {
+      var paramProportion = window.pinProportionValue * (b - a) + a;
+
+      return paramProportion;
     };
 
     var effectChrome = imgPreview.querySelector('.effects__preview--chrome');
@@ -256,43 +311,29 @@
     var effectHeat = imgPreview.querySelector('.effects__preview--heat');
 
     if (effectChrome) {
-      effectChrome.style.filter = 'grayscale(' + getFilterValueEffects(0, 1) + ')';
+      effectChrome.style.filter = 'grayscale(' + getParamProportion(0, 1) + ')';
     }
     if (effectSepia) {
-      effectSepia.style.filter = 'sepia(' + getFilterValueEffects(0, 1) + ')';
+      effectSepia.style.filter = 'sepia(' + getParamProportion(0, 1) + ')';
     }
     if (effectMarvin) {
-      effectMarvin.style.filter = 'invert(' + getFilterValueEffects(0, 100) + '%)';
+      effectMarvin.style.filter = 'invert(' + getParamProportion(0, 100) + '%)';
     }
     if (effectPhobos) {
-      effectPhobos.style.filter = 'blur(' + getFilterValueEffects(0, 3) + 'px)';
+      effectPhobos.style.filter = 'blur(' + getParamProportion(0, 3) + 'px)';
     }
     if (effectHeat) {
-      effectHeat.style.filter = 'brightness(' + getFilterValueEffects(1, 3) + ')';
+      effectHeat.style.filter = 'brightness(' + getParamProportion(1, 3) + ')';
     }
   };
 
-  var setEffects = function (evt) {
-    scalePin.addEventListener('mouseup', getPinValue);
-    filterPreview.classList = '';
-    var filterClass = 'effects__preview--' + evt.target.value;
-    filterPreview.classList.add(filterClass);
-    filterPreview.style = 'none';
-    scaleBox.classList.toggle('hidden', evt.target.value === 'none');
-  };
-
-  for (var i = 0; i < filterInputs.length; i++) {
-    filterInputs[i].addEventListener('change', setEffects);
-  }
 
   /* Валидация */
-
   var HASHTAGS_NUMBER = 5;
-  var HASHTAGS_MIN_SIMBOLS = 2;
-  var HASHTAGS_MAX_SIMBOLS = 20;
+  var HASHTAGS_MIN_SYMBOLS = 2;
+  var HASHTAGS_MAX_SYMBOLS = 20;
   var hashtagsField = document.querySelector('input[name=hashtags]');
   var commentField = document.querySelector('.text__description');
-  // var buttonForm = document.querySelector('#upload-submit');
 
   hashtagsField.addEventListener('focus', onEscPressReset);
   hashtagsField.addEventListener('blur', onEscPressRecovery);
@@ -301,24 +342,16 @@
 
   var checkValidHashtag = function () {
     /* получаем массив из хэштегов */
-    var hashtags = hashtagsField.value.toLowerCase().split(' ');
+    var hashtags = hashtagsField.value.toLowerCase().split(/\s+/g);
 
     /* проверяем повторяющиеся хэш-теги */
     var checkHashtagsUnique = function (element, index, array) {
       return array.indexOf(element) === index;
     };
 
-    /* проверяем на наличие пробела перед тегом */
-    var checkSimbolSpace = function () {
-      for (var k = 0; k < hashtags.length; k++) {
-        var hashtagSymbols = hashtags[k].split('');
-        for (var n = 1; n < hashtagSymbols.length; n++) {
-          if (hashtagSymbols[n] === '#') {
-            return false;
-          }
-        }
-      }
-      return true;
+    /* проверяем на наличие пробелов */
+    var checkHashtagsSpace = function (element) {
+      return element.indexOf('#', 1) === -1;
     };
 
     /* проверяем на количество хэштегов */
@@ -328,11 +361,11 @@
       for (var k = 0; k < hashtags.length; k++) {
         if (hashtags[k].charAt(0) !== '#') {
           hashtagsField.setCustomValidity('Попробуйте начать ваш хэш-тег со знака #');
-        } else if (hashtags[k].length > HASHTAGS_MAX_SIMBOLS) {
-          hashtagsField.setCustomValidity('Будьте скромнее, придумайте хэш-тег менее ' + HASHTAGS_MAX_SIMBOLS + '-и символов');
-        } else if (hashtags[k].length < HASHTAGS_MIN_SIMBOLS) {
-          hashtagsField.setCustomValidity('Не стесняйтесь, придумайте хэш-тег длинее ' + HASHTAGS_MIN_SIMBOLS + '-х символов');
-        } else if (!checkSimbolSpace(hashtags)) {
+        } else if (hashtags[k].length > HASHTAGS_MAX_SYMBOLS) {
+          hashtagsField.setCustomValidity('Будьте скромнее, придумайте хэш-тег менее ' + HASHTAGS_MAX_SYMBOLS + '-и символов');
+        } else if (hashtags[k].length < HASHTAGS_MIN_SYMBOLS) {
+          hashtagsField.setCustomValidity('Не стесняйтесь, придумайте хэш-тег длинее ' + HASHTAGS_MIN_SYMBOLS + '-х символов');
+        } else if (!hashtags.every(checkHashtagsSpace)) {
           hashtagsField.setCustomValidity('Мы за чистоту восприятия! Поcтавьте пробел между вашими хэш-тегами');
         } else if (!hashtags.every(checkHashtagsUnique)) {
           hashtagsField.setCustomValidity('Будьте уникальным, не повторяйте ваши хэш-теги');
