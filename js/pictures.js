@@ -8,8 +8,6 @@
   var COMMENTS = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
   var DESCRIPTION = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
   var FOTOS_NUMBERS = 25;
-  var MIN_LEVEL_SLIDER = 0;
-  var MAX_LEVEL_SLAIDER = 100 + '%';
   var randomFotos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
   var similarFotoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var similarFotoList = document.querySelector('.pictures');
@@ -229,6 +227,8 @@
 
   /* Наложение эффекта на изображение */
 
+  var MIN_LEVEL_SLIDER = 0;
+  var MAX_LEVEL_SLAIDER = 100 + '%';
   var filterInputs = document.querySelectorAll('.effects__radio');
   var filterPreview = imgPreview.querySelector('.img-upload__preview img');
   var filterInputCheck = document.querySelector('.effects__radio[checked]');
@@ -238,34 +238,38 @@
   var scalePin = scaleBox.querySelector('.scale__pin');
   var scaleLevel = scaleBox.querySelector('.scale__level');
 
-  /* Перемещение пина на слайдере */
+  /* ===== Перемещение пина на слайдере ===== */
 
-  var movePin = function () {
+  /* Получение координат для перемещения пина */
+  var movePin = function (evt) {
     var scaleLineCoords = scaleLine.getBoundingClientRect();
     var scaleLineLeft = scaleLineCoords.left;
     var scaleLineWidth = scaleLineCoords.width;
+    var startCoords = evt.clientX;
+    var scalePinCoordX = startCoords - scaleLineLeft;
+    window.pinProportionValue = scalePinCoordX / scaleLineWidth;
 
+    if (scalePinCoordX < MIN_LEVEL_SLIDER) {
+      scalePinCoordX = MIN_LEVEL_SLIDER;
+    } else if (scalePinCoordX > scaleLineWidth) {
+      scalePinCoordX = scaleLineWidth;
+    }
+
+    scalePin.style.left = scalePinCoordX + 'px';
+    scaleLevel.style.width = scalePin.style.left;
+    getValueEffect();
+  };
+
+  /* События, при которых происходит перемещение */
+  var onMouseDown = function () {
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-
-      var startCoords = moveEvt.clientX;
-      var scalePinCoordX = startCoords - scaleLineLeft;
-      window.pinProportionValue = scalePinCoordX / scaleLineWidth;
-
-
-      if (scalePinCoordX < MIN_LEVEL_SLIDER) {
-        scalePinCoordX = MIN_LEVEL_SLIDER;
-      } else if (scalePinCoordX > scaleLineWidth) {
-        scalePinCoordX = scaleLineWidth;
-      }
-
-      scalePin.style.left = scalePinCoordX + 'px';
-      scaleLevel.style.width = scalePin.style.left;
-      getValueEffect();
+      movePin(moveEvt);
     };
 
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
+      movePin(upEvt);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -275,7 +279,7 @@
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  scalePin.addEventListener('mousedown', movePin);
+  scaleBox.addEventListener('mousedown', onMouseDown);
 
   /* Перключение эффектов фотографии */
   var setEffects = function (evt) {
