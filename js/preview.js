@@ -27,7 +27,7 @@
 
   // вывод комментариев под фото
   var getComments = function () {
-    var countComments = window.random.getRandomNumber(COMMENT_COUNT_MIN, COMMENT_COUNT_MAX);
+    var countComments = window.util.getRandomNumber(COMMENT_COUNT_MIN, COMMENT_COUNT_MAX);
 
     deleteOldComments();
     for (var i = 0; i < countComments; i++) {
@@ -38,14 +38,14 @@
 
       var usersAvatar = document.createElement('img');
       usersAvatar.classList.add('social__picture');
-      usersAvatar.src = 'img/avatar-' + window.random.getRandomNumber(1, 6) + '.svg';
+      usersAvatar.src = 'img/avatar-' + window.util.getRandomNumber(1, 6) + '.svg';
       usersAvatar.alt = 'Аватар комментатора фотографии';
       usersAvatar.width = 35;
       usersAvatar.height = 35;
       userComents.appendChild(usersAvatar);
 
 
-      var randomComment = window.random.getRandomElement(window.dataFotos.getFotos[i].comments);
+      var randomComment = window.util.getRandomElement(window.dataFotos.getFotos[i].comments);
 
       var textUserComments = document.createElement('p');
       textUserComments.classList.add('social__text');
