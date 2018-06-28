@@ -65,6 +65,7 @@
   window.pictureEffects = {
     filterDefault: function () {
       filterPreview.classList.add(filterDefault);
+      window.slider.default();
     },
     getValueEffect: function () {
       getValueEffect();

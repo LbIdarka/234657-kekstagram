@@ -35,7 +35,7 @@
   };
 
   // Значения по умолчанию при новом открытии окна
-  var defoultValueResize = function () {
+  var defaultValueResize = function () {
     resizeControl.value = valueResizeDefault + '%';
     valueResize = valueResizeDefault;
     imgPreview.style.transform = 'none';
@@ -46,6 +46,6 @@
   increaseImg.addEventListener('click', resizePlus);
 
   window.pictureResize = {
-    defoultValueResize: defoultValueResize
+    defoultValueResize: defaultValueResize
   };
 })();

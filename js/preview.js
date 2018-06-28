@@ -3,25 +3,27 @@
 (function () {
   var COMMENT_COUNT_MIN = 1;
   var COMMENT_COUNT_MAX = 2;
-  var bigFoto = document.querySelector('.big-picture');
-  var bigFotoEsc = bigFoto.querySelector('.big-picture__cancel');
-  var containerSocialComment = bigFoto.querySelector('.social__comments');
-  var socialCommentInput = bigFoto.querySelector('.social__footer-text');
-  var miniFotoLink = document.querySelectorAll('.picture__link');
+  var bigPhoto = document.querySelector('.big-picture');
+  var bigPhotoEsc = bigPhoto.querySelector('.big-picture__cancel');
+  var containerSocialComment = bigPhoto.querySelector('.social__comments');
+  var socialCommentInput = bigPhoto.querySelector('.social__footer-text');
+  var miniPhotoLink = document.querySelectorAll('.picture__link');
 
   // Отрисовка большого фото
-  var renderBigFoto = function (index) {
-    bigFoto.querySelector('.big-picture__img img').src = window.dataFotos.getFotos[index].url;
-    bigFoto.querySelector('.likes-count').textContent = window.dataFotos.getFotos[index].likes;
-    bigFoto.querySelector('.comments-count').textContent = window.dataFotos.getFotos[index].comments.length;
-    bigFoto.querySelector('.social__caption').textContent = window.dataFotos.getFotos[index].description;
+  var renderBigPhoto = function (index) {
+    index = window.dataPhotos.getPhotos[index];
+
+    bigPhoto.querySelector('.big-picture__img img').src = index.url;
+    bigPhoto.querySelector('.likes-count').textContent = index.likes;
+    bigPhoto.querySelector('.comments-count').textContent = index.comments.length;
+    bigPhoto.querySelector('.social__caption').textContent = index.description;
 
     getComments();
 
-    bigFoto.classList.remove('hidden');
-    document.addEventListener('keydown', onBigFotoClose);
+    bigPhoto.classList.remove('hidden');
+    document.addEventListener('keydown', onBigPhotoClose);
 
-    return bigFoto;
+    return bigPhoto;
   };
 
 
@@ -45,7 +47,7 @@
       userComents.appendChild(usersAvatar);
 
 
-      var randomComment = window.util.getRandomElement(window.dataFotos.getFotos[i].comments);
+      var randomComment = window.util.getRandomElement(window.dataPhotos.getPhotos[i].comments);
 
       var textUserComments = document.createElement('p');
       textUserComments.classList.add('social__text');
@@ -54,32 +56,32 @@
     }
   };
 
-
-  // Открытие большой фотографии при клике на маленькой
-  for (var j = 0; j < miniFotoLink.length; j++) {
-    miniFotoLink[j].addEventListener('click', function (evt) {
-      var miniFoto = document.querySelectorAll('.picture__img');
-      var target = evt.target;
-      var index = Array.from(miniFoto).indexOf(target);
-      renderBigFoto(index);
-    });
-  }
+  var openPreview = function () {
+    for (var j = 0; j < miniPhotoLink.length; j++) {
+      miniPhotoLink[j].addEventListener('click', function (evt) {
+        var target = evt.currentTarget;
+        var index = target.dataset.currentIndex;
+        renderBigPhoto(index);
+      });
+    }
+  };
+  openPreview();
 
   // Закрытие большой фотографии
-  var bigFotoCancel = function () {
-    bigFoto.classList.add('hidden');
-    document.removeEventListener('keydown', onBigFotoClose);
+  var bigPhotoCancel = function () {
+    bigPhoto.classList.add('hidden');
+    document.removeEventListener('keydown', onBigPhotoClose);
   };
 
-  var onBigFotoClose = function (evt) {
+  var onBigPhotoClose = function (evt) {
     if (evt.target !== socialCommentInput) {
-      window.util.isEscEvent(evt, bigFotoCancel);
+      window.util.isEscEvent(evt, bigPhotoCancel);
     }
   };
 
-  bigFotoEsc.addEventListener('keydown', onBigFotoClose);
+  bigPhotoEsc.addEventListener('keydown', onBigPhotoClose);
 
-  bigFotoEsc.addEventListener('click', bigFotoCancel);
+  bigPhotoEsc.addEventListener('click', bigPhotoCancel);
 
   var deleteOldComments = function () {
     while (containerSocialComment.firstChild) {
@@ -89,12 +91,18 @@
 
   // Прячем блок с загрузкой и счетчиком комментариев
   var hideBlocks = function () {
-    var commentCount = bigFoto.querySelector('.social__comment-count');
-    var commentLoadmore = bigFoto.querySelector('.social__loadmore');
+    var commentCount = bigPhoto.querySelector('.social__comment-count');
+    var commentLoadmore = bigPhoto.querySelector('.social__loadmore');
 
     commentCount.classList.add('visually-hidden');
     commentLoadmore.classList.add('visually-hidden');
   };
   hideBlocks();
+
+  window.preview = {
+    renderBigPhoto: function () {
+      renderBigPhoto();
+    }
+  };
 
 })();
