@@ -1,22 +1,20 @@
 'use strict';
 
 (function () {
-  var COMMENT_COUNT_MIN = 1;
-  var COMMENT_COUNT_MAX = 2;
   var bigPhoto = document.querySelector('.big-picture');
   var bigPhotoEsc = bigPhoto.querySelector('.big-picture__cancel');
   var containerSocialComment = bigPhoto.querySelector('.social__comments');
   var socialCommentInput = bigPhoto.querySelector('.social__footer-text');
-  var miniPhotoLink = document.querySelectorAll('.picture__link');
+  var photos = window.dataPhotos.getPhotos;
 
   // Отрисовка большого фото
   var renderBigPhoto = function (index) {
-    index = window.dataPhotos.getPhotos[index];
+    var photo = photos[index];
 
-    bigPhoto.querySelector('.big-picture__img img').src = index.url;
-    bigPhoto.querySelector('.likes-count').textContent = index.likes;
-    bigPhoto.querySelector('.comments-count').textContent = index.comments.length;
-    bigPhoto.querySelector('.social__caption').textContent = index.description;
+    bigPhoto.querySelector('.big-picture__img img').src = photo.url;
+    bigPhoto.querySelector('.likes-count').textContent = photo.likes;
+    bigPhoto.querySelector('.comments-count').textContent = photo.comments.length;
+    bigPhoto.querySelector('.social__caption').textContent = photo.description;
 
     getComments();
 
@@ -29,10 +27,9 @@
 
   // вывод комментариев под фото
   var getComments = function () {
-    var countComments = window.util.getRandomNumber(COMMENT_COUNT_MIN, COMMENT_COUNT_MAX);
 
     deleteOldComments();
-    for (var i = 0; i < countComments; i++) {
+    for (var i = 0; i < photos[i].comments.length; i++) {
 
       var userComents = document.createElement('li');
       userComents.classList.add('social__comment');
@@ -47,25 +44,14 @@
       userComents.appendChild(usersAvatar);
 
 
-      var randomComment = window.util.getRandomElement(window.dataPhotos.getPhotos[i].comments);
+      var randomComment = photos[i].comments;
 
-      var textUserComments = document.createElement('p');
-      textUserComments.classList.add('social__text');
-      textUserComments.textContent = randomComment;
-      userComents.appendChild(textUserComments);
+      var textUserComment = document.createElement('p');
+      textUserComment.classList.add('social__text');
+      textUserComment.textContent = randomComment;
+      userComents.appendChild(textUserComment);
     }
   };
-
-  var openPreview = function () {
-    for (var j = 0; j < miniPhotoLink.length; j++) {
-      miniPhotoLink[j].addEventListener('click', function (evt) {
-        var target = evt.currentTarget;
-        var index = target.dataset.currentIndex;
-        renderBigPhoto(index);
-      });
-    }
-  };
-  openPreview();
 
   // Закрытие большой фотографии
   var bigPhotoCancel = function () {
@@ -100,9 +86,7 @@
   hideBlocks();
 
   window.preview = {
-    renderBigPhoto: function () {
-      renderBigPhoto();
-    }
+    renderBigPhoto: renderBigPhoto
   };
 
 })();
