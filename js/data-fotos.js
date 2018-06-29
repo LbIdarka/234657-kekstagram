@@ -12,10 +12,10 @@
 
   var urlPhoto = randomPhotos.sort(window.util.flipCoin);
 
-  var getComments = function () {
+  var getComments = function (randomComments) {
     var countComments = window.util.getRandomNumber(COMMENT_COUNT_MIN, COMMENT_COUNT_MAX);
 
-    var randomComments = [];
+    randomComments = [];
 
     while (randomComments.length < countComments) {
       randomComments.push(window.util.getRandomElement(COMMENTS));
@@ -42,7 +42,6 @@
 
   window.dataPhotos = {
     getPhotos: usersPhotos,
-    getComments: getPhotos
   };
 
 })();

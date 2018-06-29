@@ -8,15 +8,16 @@
   var photos = window.dataPhotos.getPhotos;
 
   // Отрисовка большого фото
-  var renderBigPhoto = function (index) {
+  var renderBigPhoto = function (index, comments) {
     var photo = photos[index];
+    comments = photo.comments;
 
     bigPhoto.querySelector('.big-picture__img img').src = photo.url;
     bigPhoto.querySelector('.likes-count').textContent = photo.likes;
     bigPhoto.querySelector('.comments-count').textContent = photo.comments.length;
     bigPhoto.querySelector('.social__caption').textContent = photo.description;
 
-    getComments();
+    renderComments(index, comments);
 
     bigPhoto.classList.remove('hidden');
     document.addEventListener('keydown', onBigPhotoClose);
@@ -26,10 +27,10 @@
 
 
   // вывод комментариев под фото
-  var getComments = function () {
-
+  var renderComments = function (index, comments) {
     deleteOldComments();
-    for (var i = 0; i < photos[i].comments.length; i++) {
+
+    for (var i = 0; i < comments.length; i++) {
 
       var userComents = document.createElement('li');
       userComents.classList.add('social__comment');
@@ -43,12 +44,9 @@
       usersAvatar.height = 35;
       userComents.appendChild(usersAvatar);
 
-
-      var randomComment = photos[i].comments;
-
       var textUserComment = document.createElement('p');
       textUserComment.classList.add('social__text');
-      textUserComment.textContent = randomComment;
+      textUserComment.textContent = comments;
       userComents.appendChild(textUserComment);
     }
   };
