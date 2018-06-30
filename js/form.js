@@ -98,4 +98,12 @@
 
   hashtagsField.addEventListener('input', checkValidHashtag);
 
+  uploadImg.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(uploadImg), function (response) {
+      uploadImgOpen.classList.add('hidden');
+      uploadImg.reset();
+    });
+    evt.preventDefault();
+  });
+
 })();
