@@ -1265,6 +1265,10 @@ main {
   text-align: center;
 }
 
+.invalid-field {
+  border: 3px solid red;
+}
+
 
 @media (min-width: 1024px) and (max-width: 1359px) {
   .container {

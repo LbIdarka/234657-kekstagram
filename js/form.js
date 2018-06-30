@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
+  var HASHTAGS_NUMBER = 5;
+  var HASHTAGS_MIN_SYMBOLS = 2;
+  var HASHTAGS_MAX_SYMBOLS = 20;
   var uploadImg = document.querySelector('#upload-select-image');
   var uploadImgLabel = uploadImg.querySelector('#upload-file');
   var uploadImgOpen = uploadImg.querySelector('.img-upload__overlay');
   var uploadImgClose = uploadImg.querySelector('#upload-cancel');
-  var HASHTAGS_NUMBER = 5;
-  var HASHTAGS_MIN_SYMBOLS = 2;
-  var HASHTAGS_MAX_SYMBOLS = 20;
   var hashtagsField = document.querySelector('input[name=hashtags]');
   var commentField = document.querySelector('.text__description');
 
@@ -41,6 +41,8 @@
     uploadImgOpen.classList.add('hidden');
 
     uploadImgLabel.removeEventListener('change', openEditImg);
+    hashtagsField.removeEventListener('invalid', applyInvalidStyle);
+    hashtagsField.classList.remove('invalid-field');
     onEscPressReset();
   };
 
@@ -98,7 +100,15 @@
 
   hashtagsField.addEventListener('input', checkValidHashtag);
 
+  var applyInvalidStyle = function (evt) {
+    evt.target.classList.add('invalid-field');
+  };
+
+  hashtagsField.addEventListener('invalid', applyInvalidStyle);
+
+
   uploadImg.addEventListener('submit', function (evt) {
+
     window.backend.upload(new FormData(uploadImg), function (response) {
       uploadImgOpen.classList.add('hidden');
       uploadImg.reset();
