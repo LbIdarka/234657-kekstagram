@@ -22,7 +22,7 @@
     return photoElement;
   };
 
-  var renderPhoto = function (photos) {
+  var renderPhotos = function (photos) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < photos.length; i++) {
@@ -31,6 +31,13 @@
     return similarPhotoList.appendChild(fragment);
   };
 
-  window.backend.load(renderPhoto, window.util.onError);
+  var loadPhotos = function () {
+    window.backend.load(renderPhotos, window.util.onError);
+
+  };
+
+  window.miniPicture = {
+    loadPhotos: loadPhotos
+  };
 
 })();
