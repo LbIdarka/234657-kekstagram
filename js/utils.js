@@ -19,6 +19,20 @@
 
     flipCoin: function () {
       return Math.random() - 0.5;
+    },
+
+    onError: function (error) {
+      if (error === window.backend.badRequest) {
+        var messageBadRequest = document.querySelector('.img-upload__message--error');
+        messageBadRequest.classList.remove('hidden');
+      } else {
+        var message = document.querySelector('.upload-error');
+        message.style = 'display: block';
+        var messageText = document.createElement('p');
+        messageText.classList.add('upload-error__text');
+        messageText.textContent = error;
+        message.appendChild(messageText);
+      }
     }
   };
 })();

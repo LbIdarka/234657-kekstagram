@@ -109,10 +109,10 @@
 
   uploadImg.addEventListener('submit', function (evt) {
 
-    window.backend.upload(new FormData(uploadImg), function (response) {
+    window.backend.upload(new FormData(uploadImg), function () {
       uploadImgOpen.classList.add('hidden');
       uploadImg.reset();
-    });
+    }, window.util.onError);
     evt.preventDefault();
   });
 

@@ -2,31 +2,13 @@
 
 (function () {
   var URL = 'https://js.dump.academy/kekstagram';
-  // var URL_DATA = URL + '/data';
+  var URL_DATA = URL + '/data';
+  var OK = 200;
+  var BAD_REQUEST = 400;
+  var UNAUTHORIZED = 401;
+  var NOT_FOUND = 404;
 
-  // var load = function (onLoad) {
-  //   var xhr = new XMLHttpRequest();
-  //   xhr.responseType = 'json';
-
-  //   xhr.open('GET', URL_DATA);
-
-  //   xhr.addEventListener('load', function () {
-  //     onLoad(xhr.response);
-  //   });
-
-  //   xhr.send();
-  // };
-
-  var onError = function (error) {
-    var message = document.querySelector('.upload-error');
-    message.style = 'display: block';
-    var messageText = document.createElement('p');
-    messageText.classList.add('upload-error__text');
-    messageText.textContent = error;
-    message.appendChild(messageText);
-  };
-
-  var upload = function (data, onLoad) {
+  var setLoad = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -34,16 +16,20 @@
       var error;
 
       switch (xhr.status) {
-        case 200:
+        case OK:
           onLoad(xhr.response);
           break;
 
-        case 400:
+        case BAD_REQUEST:
           error = 'Неверный запрос';
           break;
 
-        case 401:
+        case UNAUTHORIZED:
           error = 'Пользователь не авторизован';
+          break;
+
+        case NOT_FOUND:
+          error = 'Не найдено';
           break;
 
         default:
@@ -63,15 +49,28 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 1000;
+    return xhr;
+  };
 
+  var load = function (onLoad, onError) {
+    var xhr = setLoad(onLoad, onError);
+
+    xhr.open('GET', URL_DATA);
+    xhr.send();
+  };
+
+  var upload = function (data, onLoad, onError) {
+    var xhr = setLoad(onLoad, onError);
+
+    xhr.timeout = 100;
     xhr.open('POST', URL);
     xhr.send(data);
   };
 
   window.backend = {
+    load: load,
     upload: upload,
-    // load: load
+    badRequest: BAD_REQUEST
   };
 
 })();

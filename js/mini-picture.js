@@ -4,33 +4,34 @@
   var similarPhotoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var similarPhotoList = document.querySelector('.pictures');
 
-  var photos = window.dataPhotos.getPhotos;
+  // var photos = window.dataPhotos.getPhotos;
   var renderBigPhoto = window.preview.renderBigPhoto;
 
-  var getPhotoElement = function (index) {
+  var getPhotoElement = function (photo) {
     var photoElement = similarPhotoTemplate.cloneNode(true);
-    var photo = photos[index];
 
     photoElement.querySelector('.picture__img').src = photo.url;
     photoElement.querySelector('.picture__stat--likes').textContent = photo.likes;
-    photoElement.querySelector('.picture__stat--comments').textContent = photo.description;
+    photoElement.querySelector('.picture__stat--comments').textContent = photo.comments.length;
 
     photoElement.addEventListener('click', function () {
-      renderBigPhoto(index);
+      renderBigPhoto(photo);
+      var modal = document.querySelector('body');
+      modal.classList.add('modal-open');
     });
 
     return photoElement;
   };
 
-  var renderPhoto = function () {
+  var renderPhoto = function (photos) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < window.dataPhotos.getPhotos.length; i++) {
-      fragment.appendChild(getPhotoElement(i));
+    for (var i = 0; i < photos.length; i++) {
+      fragment.appendChild(getPhotoElement(photos[i]));
     }
     return similarPhotoList.appendChild(fragment);
   };
-  renderPhoto();
 
+  window.backend.load(renderPhoto, window.util.onError);
 
 })();
