@@ -4,7 +4,6 @@
   var similarPhotoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var similarPhotoList = document.querySelector('.pictures');
 
-  // var photos = window.dataPhotos.getPhotos;
   var renderBigPhoto = window.preview.renderBigPhoto;
 
   var getPhotoElement = function (photo) {

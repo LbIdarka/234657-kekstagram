@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var COMMENTS_COUNT = 5;
   var bigPhoto = document.querySelector('.big-picture');
   var bigPhotoEsc = bigPhoto.querySelector('.big-picture__cancel');
   var containerSocialComment = bigPhoto.querySelector('.social__comments');
@@ -9,7 +10,7 @@
   // Отрисовка большого фото
   var renderBigPhoto = function (photo, index, comments) {
     comments = photo.comments;
-    comments = comments.length > 5 ? comments.slice(0, 5) : comments;
+    comments = comments.length > COMMENTS_COUNT ? comments.slice(0, COMMENTS_COUNT) : comments;
 
     bigPhoto.querySelector('.big-picture__img img').src = photo.url;
     bigPhoto.querySelector('.likes-count').textContent = photo.likes;
