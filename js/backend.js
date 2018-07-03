@@ -64,7 +64,7 @@
   var upload = function (data, onLoad, onError) {
     var xhr = setLoad(onLoad, onError);
 
-    xhr.timeout = 100;
+    xhr.timeout = 1000;
     xhr.open('POST', URL);
     xhr.send(data);
   };
