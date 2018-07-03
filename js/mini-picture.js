@@ -40,25 +40,25 @@
     filtersPhoto.classList.remove('img-filters--inactive');
   };
 
-  var updatePhotos = function () {
+  var updatePhotos = window.debounce.debounce(function () {
     renderPhotos(photos);
-  };
+  });
 
   var filtersPhoto = document.querySelector('.img-filters');
 
-  var showPopularPhotos = function () {
+  var showPopularPhotos = window.debounce.debounce(function () {
     photos = window.photos;
     similarPhotoList.innerHTML = '';
     updatePhotos();
-  };
+  });
 
-  var showNewPhotos = function () {
+  var showNewPhotos = window.debounce.debounce(function () {
     var photosCopy = window.photos.slice();
     var newPhotos = photosCopy.sort(window.util.flipCoin).slice(0, 10);
     photos = newPhotos;
     similarPhotoList.innerHTML = '';
     updatePhotos();
-  };
+  });
 
   var showDiscussedPhotos = function () {
     var photosCopy = window.photos.slice();
