@@ -7,7 +7,7 @@
   var socialCommentInput = bigPhoto.querySelector('.social__footer-text');
 
   // Отрисовка большого фото
-  var renderBigPhoto = function (photo, index, comments) {
+  var renderBigPhoto = function (photo, comments) {
     comments = photo.comments;
 
     bigPhoto.querySelector('.big-picture__img img').src = photo.url;
@@ -15,7 +15,7 @@
     bigPhoto.querySelector('.comments-count').textContent = photo.comments.length;
     bigPhoto.querySelector('.social__caption').textContent = photo.description;
 
-    renderComments(index, comments);
+    renderComments(comments);
 
     bigPhoto.classList.remove('hidden');
     document.addEventListener('keydown', onBigPhotoClose);
@@ -25,8 +25,9 @@
 
 
   // вывод комментариев под фото
-  var renderComments = function (index, comments) {
-    deleteOldComments();
+  var renderComments = function (comments) {
+    // удаляем старые комментарии
+    containerSocialComment.innerHTML = '';
 
     for (var i = 0; i < comments.length; i++) {
       var userComments = document.createElement('li');
@@ -46,7 +47,6 @@
       textUserComment.textContent = comments[i];
       userComments.appendChild(textUserComment);
     }
-
   };
 
   // Закрытие большой фотографии
@@ -54,7 +54,7 @@
     window.pictureEffects.filterDefault();
     bigPhoto.classList.add('hidden');
     document.removeEventListener('keydown', onBigPhotoClose);
-    bigPhotoEsc.removeEventListener('click', bigPhotoCancel);
+    document.removeEventListener('click', bigPhotoCancel);
   };
 
   var onBigPhotoClose = function (evt) {
@@ -66,12 +66,6 @@
   bigPhotoEsc.addEventListener('keydown', onBigPhotoClose);
 
   bigPhotoEsc.addEventListener('click', bigPhotoCancel);
-
-  var deleteOldComments = function () {
-    while (containerSocialComment.firstChild) {
-      containerSocialComment.removeChild(containerSocialComment.firstChild);
-    }
-  };
 
   // Прячем блок с загрузкой и счетчиком комментариев
   var hideBlocks = function () {
