@@ -51,8 +51,10 @@
 
   // Закрытие большой фотографии
   var bigPhotoCancel = function () {
+    window.pictureEffects.filterDefault();
     bigPhoto.classList.add('hidden');
     document.removeEventListener('keydown', onBigPhotoClose);
+    bigPhotoEsc.removeEventListener('click', bigPhotoCancel);
   };
 
   var onBigPhotoClose = function (evt) {
