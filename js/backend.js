@@ -31,7 +31,7 @@
           break;
 
         case Code.NOT_FOUND:
-          error = 'Не найдено';
+          error = 'Страница не найдена';
           break;
 
         default:
@@ -71,8 +71,7 @@
 
   window.backend = {
     load: load,
-    upload: upload,
-    badRequest: Code.BAD_REQUEST
+    upload: upload
   };
 
 })();

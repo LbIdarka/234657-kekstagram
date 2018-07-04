@@ -42,7 +42,6 @@
     document.removeEventListener('click', closeEditImg);
     hashtagsField.removeEventListener('invalid', applyInvalidStyle);
     hashtagsField.classList.remove('invalid-field');
-    window.util.onError.reset();
     onEscPressReset();
   };
 
