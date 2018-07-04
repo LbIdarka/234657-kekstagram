@@ -14,8 +14,6 @@
 
     photoElement.addEventListener('click', function () {
       renderBigPhoto(photo);
-      var modal = document.querySelector('body');
-      modal.classList.add('modal-open');
     });
 
     return photoElement;

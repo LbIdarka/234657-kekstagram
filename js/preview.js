@@ -5,6 +5,7 @@
   var bigPhotoEsc = bigPhoto.querySelector('.big-picture__cancel');
   var containerSocialComment = bigPhoto.querySelector('.social__comments');
   var socialCommentInput = bigPhoto.querySelector('.social__footer-text');
+  var modal = document.querySelector('body');
 
   // Отрисовка большого фото
   var renderBigPhoto = function (photo, comments) {
@@ -19,6 +20,8 @@
 
     bigPhoto.classList.remove('hidden');
     document.addEventListener('keydown', onBigPhotoClose);
+
+    modal.classList.add('modal-open');
 
     return bigPhoto;
   };
@@ -52,6 +55,7 @@
   // Закрытие большой фотографии
   var bigPhotoCancel = function () {
     bigPhoto.classList.add('hidden');
+    modal.classList.remove('modal-open');
     document.removeEventListener('keydown', onBigPhotoClose);
     document.removeEventListener('click', bigPhotoCancel);
   };
