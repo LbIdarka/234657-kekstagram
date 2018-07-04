@@ -38,6 +38,7 @@
   var closeEditImg = function () {
     uploadImgOpen.classList.add('hidden');
     window.pictureEffects.filterReset();
+    window.downloadPhoto.messageReset();
     document.removeEventListener('change', openEditImg);
     document.removeEventListener('click', closeEditImg);
     hashtagsField.removeEventListener('invalid', applyInvalidStyle);
