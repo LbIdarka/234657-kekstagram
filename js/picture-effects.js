@@ -5,7 +5,7 @@
   var effects = document.querySelector('.img-upload__form');
   var filterPreview = effects.querySelector('.img-upload__preview img');
   var filterInputCheck = document.querySelector('.effects__radio[checked]');
-  var filterDefault = 'effects__preview--' + filterInputCheck.value;
+  var filterDefaultClass = 'effects__preview--' + filterInputCheck.value;
 
   // Сброс эффектов и состояния слайдера до дефолтного
   var filterReset = function () {
@@ -88,10 +88,12 @@
 
 
   window.pictureEffects = {
+    filterReset: filterReset,
+
     filterDefault: function () {
-      filterPreview.classList.add(filterDefault);
-      filterReset();
+      filterPreview.classList.add(filterDefaultClass);
       window.slider.scaleBox.classList.remove('hidden');
+      window.slider.default();
     },
 
     getValueEffect: getValueEffect

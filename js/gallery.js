@@ -66,7 +66,11 @@
     filterBtn.forEach(function (btn) {
       btn.classList.remove('img-filters__button--active');
     });
-    similarPhotoList.innerHTML = '';
+
+    similarPhotoList.querySelectorAll('.picture__link').forEach(function (element) {
+      similarPhotoList.removeChild(element);
+    });
+
     var idFilter = evt.target.id;
     evt.target.classList.add('img-filters__button--active');
     classToFilter[idFilter]();
