@@ -8,9 +8,10 @@
   var renderPhotos = function (photos) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < photos.length; i++) {
-      fragment.appendChild(window.miniPicture.getPhotoElement(photos[i]));
-    }
+    photos.forEach(function (photo) {
+      fragment.appendChild(window.miniPicture.getPhotoElement(photo));
+    });
+
     return similarPhotoList.appendChild(fragment);
   };
 
@@ -33,7 +34,6 @@
 
   var showPopularPhotos = window.debounce.debounce(function () {
     photos = window.photos;
-    similarPhotoList.innerHTML = '';
     updatePhotos();
   });
 
@@ -41,7 +41,6 @@
     var photosCopy = window.photos.slice();
     var newPhotos = photosCopy.sort(window.util.flipCoin).slice(0, 10);
     photos = newPhotos;
-    similarPhotoList.innerHTML = '';
     updatePhotos();
   });
 
@@ -51,7 +50,6 @@
       return right.comments.length - left.comments.length;
     });
     photos = discussedPhoto;
-    similarPhotoList.innerHTML = '';
     updatePhotos();
   });
 
@@ -68,14 +66,13 @@
     filterBtn.forEach(function (btn) {
       btn.classList.remove('img-filters__button--active');
     });
+    similarPhotoList.innerHTML = '';
     var idFilter = evt.target.id;
     evt.target.classList.add('img-filters__button--active');
     classToFilter[idFilter]();
   };
 
-  filterForm.addEventListener('click', function (evt) {
-    showFiltersPhoto(evt);
-  });
+  filterForm.addEventListener('click', showFiltersPhoto);
 
   window.backend.load(loadPhotos, window.util.onError);
 

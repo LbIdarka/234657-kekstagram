@@ -55,9 +55,7 @@
 
 
   window.slider = {
-    default: function () {
-      getDefaultSlider();
-    },
+    default: getDefaultSlider,
     scaleBox: scaleBox,
     scalePinCoordX: window.scalePinCoordX,
     scaleLineWidth: window.scaleLineWidth
