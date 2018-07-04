@@ -3,10 +3,12 @@
 (function () {
   var URL = 'https://js.dump.academy/kekstagram';
   var URL_DATA = URL + '/data';
-  var OK = 200;
-  var BAD_REQUEST = 400;
-  var UNAUTHORIZED = 401;
-  var NOT_FOUND = 404;
+  var Code = {
+    OK: 200,
+    BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
+    NOT_FOUND: 404
+  };
 
   var setLoad = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -16,19 +18,19 @@
       var error;
 
       switch (xhr.status) {
-        case OK:
+        case Code.OK:
           onLoad(xhr.response);
           break;
 
-        case BAD_REQUEST:
+        case Code.BAD_REQUEST:
           error = 'Неверный запрос';
           break;
 
-        case UNAUTHORIZED:
+        case Code.UNAUTHORIZED:
           error = 'Пользователь не авторизован';
           break;
 
-        case NOT_FOUND:
+        case Code.NOT_FOUND:
           error = 'Не найдено';
           break;
 
@@ -62,7 +64,7 @@
   var upload = function (data, onLoad, onError) {
     var xhr = setLoad(onLoad, onError);
 
-    xhr.timeout = 100;
+    xhr.timeout = 1000;
     xhr.open('POST', URL);
     xhr.send(data);
   };
@@ -70,7 +72,7 @@
   window.backend = {
     load: load,
     upload: upload,
-    badRequest: BAD_REQUEST
+    badRequest: Code.BAD_REQUEST
   };
 
 })();

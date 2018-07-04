@@ -11,6 +11,7 @@
   var hashtagsField = document.querySelector('input[name=hashtags]');
   var commentField = document.querySelector('.text__description');
 
+
   // Открытие окна с загрузкой фотографии
   var onEditImgEscPress = function (evt) {
     window.util.isEscEvent(evt, closeEditImg);
@@ -28,31 +29,24 @@
     uploadImgOpen.classList.remove('hidden');
     window.pictureEffects.filterDefault();
     window.pictureResize.defoultValueResize();
-
     onEscPressRecovery();
   };
 
-    // Закрытие окна с загрузкой фотографии
-  uploadImgLabel.addEventListener('change', function () {
-    openEditImg();
-  });
+  uploadImgLabel.addEventListener('change', openEditImg);
+
 
   var closeEditImg = function () {
     uploadImgOpen.classList.add('hidden');
-
-    uploadImgLabel.removeEventListener('change', openEditImg);
+    window.pictureEffects.filterReset();
+    document.removeEventListener('change', openEditImg);
+    document.removeEventListener('click', closeEditImg);
     hashtagsField.removeEventListener('invalid', applyInvalidStyle);
     hashtagsField.classList.remove('invalid-field');
+    window.util.onError.reset();
     onEscPressReset();
   };
 
-  uploadImgLabel.addEventListener('change', function () {
-    openEditImg();
-  });
-
-  uploadImgClose.addEventListener('click', function () {
-    closeEditImg();
-  });
+  uploadImgClose.addEventListener('click', closeEditImg);
 
   // Отмена закрытия по ESC при фокусе текстовых полей
   hashtagsField.addEventListener('focus', onEscPressReset);
@@ -98,15 +92,21 @@
     }
   };
 
-  hashtagsField.addEventListener('input', checkValidHashtag);
+  var applyCheck = function () {
+    if (checkValidHashtag) {
+      hashtagsField.classList.remove('invalid-field');
+    }
+    checkValidHashtag();
+  };
+  hashtagsField.addEventListener('input', applyCheck);
 
+  // показываем невалидное поле
   var applyInvalidStyle = function (evt) {
     evt.target.classList.add('invalid-field');
   };
-
   hashtagsField.addEventListener('invalid', applyInvalidStyle);
 
-
+  // отправляем данные из формы
   uploadImg.addEventListener('submit', function (evt) {
 
     window.backend.upload(new FormData(uploadImg), function () {

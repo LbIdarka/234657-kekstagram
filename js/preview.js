@@ -1,34 +1,36 @@
 'use strict';
 
 (function () {
-  var COMMENTS_COUNT = 5;
   var bigPhoto = document.querySelector('.big-picture');
   var bigPhotoEsc = bigPhoto.querySelector('.big-picture__cancel');
   var containerSocialComment = bigPhoto.querySelector('.social__comments');
   var socialCommentInput = bigPhoto.querySelector('.social__footer-text');
+  var modal = document.querySelector('body');
 
   // Отрисовка большого фото
-  var renderBigPhoto = function (photo, index, comments) {
+  var renderBigPhoto = function (photo, comments) {
     comments = photo.comments;
-    comments = comments.length > COMMENTS_COUNT ? comments.slice(0, COMMENTS_COUNT) : comments;
 
     bigPhoto.querySelector('.big-picture__img img').src = photo.url;
     bigPhoto.querySelector('.likes-count').textContent = photo.likes;
     bigPhoto.querySelector('.comments-count').textContent = photo.comments.length;
     bigPhoto.querySelector('.social__caption').textContent = photo.description;
 
-    renderComments(index, comments);
+    renderComments(comments);
 
     bigPhoto.classList.remove('hidden');
     document.addEventListener('keydown', onBigPhotoClose);
+
+    modal.classList.add('modal-open');
 
     return bigPhoto;
   };
 
 
   // вывод комментариев под фото
-  var renderComments = function (index, comments) {
-    deleteOldComments();
+  var renderComments = function (comments) {
+    // удаляем старые комментарии
+    containerSocialComment.innerHTML = '';
 
     for (var i = 0; i < comments.length; i++) {
       var userComments = document.createElement('li');
@@ -48,13 +50,14 @@
       textUserComment.textContent = comments[i];
       userComments.appendChild(textUserComment);
     }
-
   };
 
   // Закрытие большой фотографии
   var bigPhotoCancel = function () {
     bigPhoto.classList.add('hidden');
+    modal.classList.remove('modal-open');
     document.removeEventListener('keydown', onBigPhotoClose);
+    document.removeEventListener('click', bigPhotoCancel);
   };
 
   var onBigPhotoClose = function (evt) {
@@ -66,12 +69,6 @@
   bigPhotoEsc.addEventListener('keydown', onBigPhotoClose);
 
   bigPhotoEsc.addEventListener('click', bigPhotoCancel);
-
-  var deleteOldComments = function () {
-    while (containerSocialComment.firstChild) {
-      containerSocialComment.removeChild(containerSocialComment.firstChild);
-    }
-  };
 
   // Прячем блок с загрузкой и счетчиком комментариев
   var hideBlocks = function () {

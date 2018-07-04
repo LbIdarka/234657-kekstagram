@@ -2,7 +2,6 @@
 
 (function () {
   var similarPhotoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
-  var similarPhotoList = document.querySelector('.pictures');
 
   var renderBigPhoto = window.preview.renderBigPhoto;
 
@@ -15,22 +14,13 @@
 
     photoElement.addEventListener('click', function () {
       renderBigPhoto(photo);
-      var modal = document.querySelector('body');
-      modal.classList.add('modal-open');
     });
 
     return photoElement;
   };
 
-  var renderPhoto = function (photos) {
-    var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < photos.length; i++) {
-      fragment.appendChild(getPhotoElement(photos[i]));
-    }
-    return similarPhotoList.appendChild(fragment);
+  window.miniPicture = {
+    getPhotoElement: getPhotoElement
   };
-
-  window.backend.load(renderPhoto, window.util.onError);
 
 })();
