@@ -1236,13 +1236,17 @@ main {
   background-position: 0 -105px;
 }
 
+.invalid-field {
+  border: 3px solid red;
+}
+
 .upload-error {
   position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
   display: none;
-  width: 50%;
-  padding: 40px;
+  width: 35%;
+  padding: 70px;
   font: inherit;
   color: #000000;
   background-color: #ffffff;
@@ -1265,9 +1269,6 @@ main {
   text-align: center;
 }
 
-.invalid-field {
-  border: 3px solid red;
-}
 
 
 @media (min-width: 1024px) and (max-width: 1359px) {

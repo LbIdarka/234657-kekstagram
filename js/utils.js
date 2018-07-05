@@ -2,6 +2,7 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+
   window.util = {
     isEscEvent: function (evt, action) {
       if (evt.keyCode === ESC_KEYCODE) {
@@ -22,17 +23,13 @@
     },
 
     onError: function (error) {
-      if (error === window.backend.badRequest) {
-        var messageBadRequest = document.querySelector('.img-upload__message--error');
-        messageBadRequest.classList.remove('hidden');
-      } else {
-        var message = document.querySelector('.upload-error');
-        message.style = 'display: block';
-        var messageText = document.createElement('p');
-        messageText.classList.add('upload-error__text');
-        messageText.textContent = error;
-        message.appendChild(messageText);
-      }
+      var similarErrorTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
+      var body = document.querySelector('body');
+      var errorMessage = similarErrorTemplate.cloneNode(true);
+      body.appendChild(errorMessage);
+      errorMessage.textContent = error;
+      errorMessage.style = ('z-index: 2');
+      errorMessage.classList.remove('hidden');
     }
   };
 })();

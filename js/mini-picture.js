@@ -2,7 +2,6 @@
 
 (function () {
   var similarPhotoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
-
   var renderBigPhoto = window.preview.renderBigPhoto;
 
   var getPhotoElement = function (photo) {
@@ -20,7 +19,7 @@
   };
 
   window.miniPicture = {
-    getPhotoElement: getPhotoElement
+    getPhoto: getPhotoElement
   };
 
 })();

@@ -7,7 +7,8 @@
   var scaleLine = scaleBox.querySelector('.scale__line');
   var scalePin = scaleBox.querySelector('.scale__pin');
   var scaleLevel = scaleBox.querySelector('.scale__level');
-  /* Получение координат для перемещения пина */
+
+  // Получение координат для перемещения пина
   var movePin = function (evt) {
     var scaleLineCoords = scaleLine.getBoundingClientRect();
     var scaleLineLeft = scaleLineCoords.left;
@@ -27,7 +28,7 @@
   };
 
 
-  /* События, при которых происходит перемещение */
+  // События, при которых происходит перемещение
   var onMouseDown = function () {
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();

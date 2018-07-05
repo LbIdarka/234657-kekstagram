@@ -34,15 +34,15 @@
 
   uploadImgLabel.addEventListener('change', openEditImg);
 
-
+  // Закрытие окна с загрузкой фотографии
   var closeEditImg = function () {
     uploadImgOpen.classList.add('hidden');
     window.pictureEffects.filterReset();
+    window.downloadPhoto.messageReset();
     document.removeEventListener('change', openEditImg);
     document.removeEventListener('click', closeEditImg);
     hashtagsField.removeEventListener('invalid', applyInvalidStyle);
     hashtagsField.classList.remove('invalid-field');
-    window.util.onError.reset();
     onEscPressReset();
   };
 
@@ -57,20 +57,20 @@
 
   // Валидация формы
   var checkValidHashtag = function () {
-    /* получаем массив из хэштегов */
+    // Получаем массив из хэштегов
     var hashtags = hashtagsField.value.toLowerCase().split(/\s+/g);
 
-    /* проверяем повторяющиеся хэш-теги */
+    // Проверяем повторяющиеся хэш-теги
     var checkHashtagsUnique = function (element, index, array) {
       return array.indexOf(element) === index;
     };
 
-    /* проверяем на наличие пробелов */
+    // Проверяем на наличие пробелов
     var checkHashtagsSpace = function (element) {
       return element.indexOf('#', 1) === -1;
     };
 
-    /* проверяем на количество хэштегов */
+    // Проверяем на количество хэштегов
     if (hashtags.length > HASHTAGS_NUMBER) {
       hashtagsField.setCustomValidity('Краткость - сестра таланта, ' + HASHTAGS_NUMBER + '-ть хэш-тегов - это максимум');
     } else {
@@ -100,13 +100,13 @@
   };
   hashtagsField.addEventListener('input', applyCheck);
 
-  // показываем невалидное поле
+  // Показываем невалидное поле
   var applyInvalidStyle = function (evt) {
     evt.target.classList.add('invalid-field');
   };
   hashtagsField.addEventListener('invalid', applyInvalidStyle);
 
-  // отправляем данные из формы
+  // Отправляем данные из формы
   uploadImg.addEventListener('submit', function (evt) {
 
     window.backend.upload(new FormData(uploadImg), function () {
