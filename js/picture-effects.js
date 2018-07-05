@@ -91,9 +91,12 @@
     filterReset: filterReset,
 
     filterDefault: function () {
-      filterPreview.classList.add(filterDefaultClass);
       window.slider.scaleBox.classList.remove('hidden');
       window.slider.default();
+      if (filterPreview.className !== filterDefaultClass) {
+        filterPreview.classList = '';
+        filterPreview.classList.add(filterDefaultClass);
+      }
     },
 
     getValueEffect: getValueEffect
