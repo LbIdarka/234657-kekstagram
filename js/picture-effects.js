@@ -43,7 +43,7 @@
       return paramEffect;
     };
 
-    var depthEffectMap = {
+    var depthEffectsMap = {
       'effects__preview--chrome': {
         filter: 'grayscale(',
         minValue: 0,
@@ -81,7 +81,7 @@
     };
 
     var effectsName = filterPreview.className;
-    var map = depthEffectMap[effectsName];
+    var map = depthEffectsMap[effectsName];
 
     filterPreview.style.filter = map.filter + getParamEffect(map.minValue, map.maxValue) + map.unit;
   };

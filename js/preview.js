@@ -19,17 +19,16 @@
     renderComments(comments);
 
     bigPhoto.classList.remove('hidden');
-    document.addEventListener('keydown', onBigPhotoClose);
-
     modal.classList.add('modal-open');
+    document.addEventListener('keydown', onBigPhotoEscClose);
 
     return bigPhoto;
   };
 
 
-  // вывод комментариев под фото
+  // Вывод комментариев под фото
   var renderComments = function (comments) {
-    // удаляем старые комментарии
+
     containerSocialComment.innerHTML = '';
 
     for (var i = 0; i < comments.length; i++) {
@@ -53,30 +52,30 @@
   };
 
   // Закрытие большой фотографии
-  var bigPhotoCancel = function () {
+  var closeBigPhoto = function () {
     bigPhoto.classList.add('hidden');
     modal.classList.remove('modal-open');
-    document.removeEventListener('keydown', onBigPhotoClose);
-    document.removeEventListener('click', bigPhotoCancel);
+    document.removeEventListener('keydown', onBigPhotoEscClose);
+    document.removeEventListener('click', closeBigPhoto);
   };
 
-  var onBigPhotoClose = function (evt) {
+  var onBigPhotoEscClose = function (evt) {
     if (evt.target !== socialCommentInput) {
-      window.util.isEscEvent(evt, bigPhotoCancel);
+      window.util.isEscEvent(evt, closeBigPhoto);
     }
   };
 
-  bigPhotoEsc.addEventListener('keydown', onBigPhotoClose);
+  bigPhotoEsc.addEventListener('keydown', onBigPhotoEscClose);
 
-  bigPhotoEsc.addEventListener('click', bigPhotoCancel);
+  bigPhotoEsc.addEventListener('click', closeBigPhoto);
 
   // Прячем блок с загрузкой и счетчиком комментариев
+  var commentLoadMore = bigPhoto.querySelector('.social__loadmore');
   var hideBlocks = function () {
     var commentCount = bigPhoto.querySelector('.social__comment-count');
-    var commentLoadmore = bigPhoto.querySelector('.social__loadmore');
 
     commentCount.classList.add('visually-hidden');
-    commentLoadmore.classList.add('visually-hidden');
+    commentLoadMore.classList.add('visually-hidden');
   };
   hideBlocks();
 

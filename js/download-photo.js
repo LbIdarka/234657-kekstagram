@@ -23,7 +23,7 @@
 
       reader.readAsDataURL(file);
     } else {
-      errorDownloadPhoto();
+      showErrorDownloadPhoto();
     }
   };
 
@@ -31,7 +31,7 @@
 
   // Выводим ошибку загрузки файла неверного типа
   var message = document.querySelector('.upload-error');
-  var errorDownloadPhoto = function () {
+  var showErrorDownloadPhoto = function () {
     message.style = 'display: block';
     var messageText = document.createElement('p');
     messageText.classList.add('upload-error__text');
