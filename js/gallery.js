@@ -2,6 +2,8 @@
 
 (function () {
 
+  var MIN_QUANTITY_NEW_PHOTOS = 0;
+  var MAX_QUANTITY_NEW_PHOTOS = 10;
   var similarPhotoList = document.querySelector('.pictures');
 
   // Отрисовываем галерею миниатюр
@@ -39,7 +41,7 @@
 
   var showNewPhotos = function () {
     var photosCopy = window.photos.slice();
-    var newPhotos = photosCopy.sort(window.util.flipCoin).slice(0, 10);
+    var newPhotos = photosCopy.sort(window.util.flipCoin).slice(MIN_QUANTITY_NEW_PHOTOS, MAX_QUANTITY_NEW_PHOTOS);
     photos = newPhotos;
     updatePhotos();
   };
@@ -60,10 +62,10 @@
   };
 
   var filterForm = filtersPhoto.querySelector('.img-filters__form');
-  var filterBtn = filtersPhoto.querySelectorAll('.img-filters__button');
+  var filterButtons = filtersPhoto.querySelectorAll('.img-filters__button');
 
-  var showFilterPhotos = window.debounce.debounce(function (evt) {
-    filterBtn.forEach(function (btn) {
+  var showFilterPhotos = window.debounce(function (evt) {
+    filterButtons.forEach(function (btn) {
       btn.classList.remove('img-filters__button--active');
     });
 

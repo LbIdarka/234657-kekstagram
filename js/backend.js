@@ -9,6 +9,7 @@
     UNAUTHORIZED: 401,
     NOT_FOUND: 404
   };
+  var MAX_TIMEOUT = 1000;
 
   var setLoad = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -64,7 +65,7 @@
   var upload = function (data, onLoad, onError) {
     var xhr = setLoad(onLoad, onError);
 
-    xhr.timeout = 1000;
+    xhr.timeout = MAX_TIMEOUT;
     xhr.open('POST', URL);
     xhr.send(data);
   };
